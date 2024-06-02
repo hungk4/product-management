@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-router.get("/", (req, res) => {
-    res.render("client/pages/products/index.pug")
-});
+const controller = require("../../controllers/client/product.controller")
+router.get("/", controller.index);
 
+// router.post("/create", controller.create);
+
+// router.patch("/edit", controller.edit);
+
+// router.get("/detail", controller.detail);
 
 module.exports = router;
