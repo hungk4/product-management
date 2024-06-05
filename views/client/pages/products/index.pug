@@ -13,7 +13,7 @@ block main
               .inner-image
                 img(src="https://cdn.dummyjson.com/product-images/1/thumbnail.jpg", alt="iPhone 9")
               .inner-content
-                h3.inner-title iPhone 9
-                .inner-price-new 80$
-                .inner-price-old 100$
-                .inner-discount -20%
+                h3.inner-title #{item.title}
+                .inner-price-new #{item.priceNew}$
+                .inner-price-old #{item.price}$
+                .inner-discount #{item.discountPercentage}%
