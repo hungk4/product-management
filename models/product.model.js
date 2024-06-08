@@ -14,7 +14,8 @@ const Product = mongoose.model(
         deleted: Boolean,
     }, 
     "products");
-
+    
+module.exports = Product;
 
 // Cach 2 dinh nghia 1 model
 
@@ -29,5 +30,3 @@ const Product = mongoose.model(
 //     deleted: Boolean,
 // });
 // const Product = mongoose.model("Product", productSchema, "products");
-
-module.exports = Product;
