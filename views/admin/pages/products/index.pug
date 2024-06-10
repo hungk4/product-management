@@ -1,7 +1,6 @@
 extends ../../layouts/default.pug
 block main
   h1(class="mb-4") Quản lý sản phẩm
-
   .card.mb-3
     .card-header Bộ lọc và Tìm kiếm
     .card-body
@@ -26,25 +25,24 @@ block main
             th Giá
             th Trạng thái
             th Hành động
-
-          tbody
-            each item, index in products
-              tr 
-                td #{index+1}
-                td
-                  img(
-                    src=item.thumbnail
-                    alt=item.title
-                    width="80px"
-                    height="auto"
-                  )
-                td #{item.title}
-                td #{item.price}$
-                td
-                  if(item.status == "active")
-                    a(href="#" class="badge badge-success") Hoạt động 
-                  else
-                    a(href="#" class="badge badge-success") Dừng hoạt động
-                td
-                  button(class="btn btn-warning btn-sm") Sửa
-                  button(class="btn btn-danger btn-sm ml-1") Xóa
+        tbody
+          each item, index in products
+            tr 
+              td #{index+1}
+              td
+                img(
+                  src=item.thumbnail
+                  alt=item.title
+                  width="80px"
+                  height="auto"
+                )
+              td #{item.title}
+              td #{item.price}$
+              td
+                if(item.status == "active")
+                  a(href="#" class="badge badge-success") Hoạt động
+                else
+                  a(href="#" class="badge badge-danger") Dừng hoạt động
+              td
+                button(class="btn btn-warning btn-sm") Sửa
+                button(class="btn btn-danger btn-sm ml-1") Xóa

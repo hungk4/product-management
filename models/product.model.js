@@ -10,6 +10,7 @@ const Product = mongoose.model(
         discountPercentage: Number,
         stock: Number,
         thumbnail: String,
+        status: String,
         position: Number,
         deleted: Boolean,
     }, 
