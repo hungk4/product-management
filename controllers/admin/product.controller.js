@@ -17,6 +17,7 @@ module.exports.index =  async (req, res) => {
   // console.log(products);
   res.render("admin/pages/products/index", {
     pageTitle: "Quản lý sản phẩm",
-    products: products
+    products: products,
+    keyword: keyword
   })
 }
