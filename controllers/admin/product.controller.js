@@ -1,5 +1,7 @@
 const Product = require("../../models/product.model");
+
 const paginationHelper = require("../../helpers/pagination.helper");
+
 // [GET] /admin/products/
 module.exports.index = async (req, res) => {
   const find = {
@@ -36,12 +38,13 @@ module.exports.index = async (req, res) => {
 
   // Phân trang
   const pagination = await paginationHelper(req, find);
-  // Hết phân trang
+  // Hết Phân trang
 
   const products = await Product
     .find(find)
     .limit(pagination.limitItems)
     .skip(pagination.skip);
+
   // console.log(products);
 
   res.render("admin/pages/products/index", {
@@ -53,17 +56,17 @@ module.exports.index = async (req, res) => {
   });
 }
 
-
-// [GET] /admin/products/change-status/:statusChange/:id
-
+// [PATCH] /admin/products/change-status/:statusChange/:id
 module.exports.changeStatus = async (req, res) => {
   const { id, statusChange } = req.params;
-  
+
   await Product.updateOne({
     _id: id
   }, {
     status: statusChange
   });
 
-  res.redirect('back');
+  res.json({
+    code: 200
+  });
 }
