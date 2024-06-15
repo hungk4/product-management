@@ -8,7 +8,7 @@ module.exports = async (req, find) => {
     pagination.currentPage = parseInt(req.query.page);
   }
 
-  pagination.skip = (pagination.curentPage-1)*pagination.limitItems;
+  pagination.skip = (pagination.currentPage-1)*pagination.limitItems;
 
   const countProducts = await Product.countDocuments(find);
   const totalPage = Math.ceil(countProducts/pagination.limitItems);
