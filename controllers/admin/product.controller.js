@@ -74,11 +74,21 @@ module.exports.changeStatus = async (req, res) => {
 // [PATCH] /admin/products/change-multi
 module.exports.changeMulti = async (req, res) => {
   const {status, ids} = req.body;
-  await Product.updateMany({
-    _id : ids
-  }, {
-    status: status
-  })
+
+  if(status == "active" || status == "inactive"){
+    await Product.updateMany({
+      _id : ids
+    }, {
+      status: status
+    })
+  }else if(status == "delete"){
+    await Product.updateMany({
+      _id: ids
+    }, {
+      deleted: true
+    })
+  }
+  
   res.json({
     code: 200
   })
