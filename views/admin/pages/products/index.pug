@@ -34,6 +34,7 @@ block main
             th Hình ảnh
             th Tiêu đề
             th Giá
+            th Vị trí
             th Trạng thái
             th Hành động
 
@@ -57,6 +58,14 @@ block main
               td #{item.title}
               td #{item.price}$
               td
+                input(
+                  link=`/${prefixAdmin}/products/change-position/${item.id}`
+                  type="number"
+                  name="position"
+                  value=item.position
+                  style="width: 60px"
+                  min="1"
+                )
                 if(item.status == "active")
                   button(
                     link=`/${prefixAdmin}/products/change-status/inactive/${item.id}`
