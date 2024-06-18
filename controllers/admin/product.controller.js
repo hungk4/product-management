@@ -84,12 +84,14 @@ module.exports.changeMulti = async (req, res) => {
   })
 }
 
-// [DELETE] /admin/products/deleteItem/:id
+// [PATCH] /admin/products/deleteItem/:id
 
 module.exports.deleteItem = async (req, res) => {
   const id = req.params.id;
-  await Product.deleteOne({
+  await Product.updateOne({
     _id: id
+  }, {
+    deleted: true
   });
   res.json({
     code: 200
