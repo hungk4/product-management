@@ -83,3 +83,15 @@ module.exports.changeMulti = async (req, res) => {
     code: 200
   })
 }
+
+// [DELETE] /admin/products/deleteItem/:id
+
+module.exports.deleteItem = async (req, res) => {
+  const id = req.params.id;
+  await Product.deleteOne({
+    _id: id
+  });
+  res.json({
+    code: 200
+  });
+}

@@ -158,3 +158,24 @@ if(boxActions) {
   });
 }
 // End Box Actions
+
+// Xoa ban ghi
+const listButtonDelete = document.querySelectorAll("[button-delete]");
+if(listButtonDelete.length > 0){
+  listButtonDelete.forEach(button => {
+    button.addEventListener("click", () => {
+      const id = button.getAttribute("button-delete");
+      fetch(`/admin/products/delete/${id}`, {
+        method: "DELETE"
+      })
+        .then(res => res.json())
+        .then(data => {
+          if(data.code == 200){
+            window.location.reload();
+          }
+        })
+
+    });
+  });
+}
+// Het Xoa ban ghi
