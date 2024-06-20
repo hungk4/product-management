@@ -138,7 +138,7 @@ if(boxActions) {
       };
 
       const link = boxActions.getAttribute("box-actions");
-
+      
       fetch(link, {
         method: "PATCH",
         headers: {
@@ -220,3 +220,44 @@ if(showAlert){
     }, time);
 }
 // End show-alert
+
+// restore
+const listButtonRestore = document.querySelectorAll("[button-restore]");
+if(listButtonRestore.length > 0){
+  listButtonRestore.forEach(button => {
+    button.addEventListener("click", () =>{
+      const link = button.getAttribute("button-restore");
+      fetch(link, {
+        method: "PATCH"
+      })
+        .then(res => res.json())
+        .then(data => {
+          if(data.code == 200){
+            window.location.reload();
+          }
+        })
+    });
+  });
+}
+// End restore
+
+// permanentlyDelete
+const listButtonPermanentlyDelete = document.querySelectorAll("[button-permanentlyDelete]");
+if(listButtonPermanentlyDelete.length > 0){
+  listButtonPermanentlyDelete.forEach(button => {
+    button.addEventListener("click", () => {
+      const link = button.getAttribute("button-permanentlyDelete");
+      fetch(link, {
+        method: "DELETE"
+      })
+        .then(res => res.json())
+        .then(data => {
+          if(data.code == 200){
+            window.location.reload();
+          }
+        })
+    })
+  });
+}
+
+// End permanentlyDelete

@@ -11,7 +11,7 @@ block main
       show-alert="3000"
     ) #{messages.success}
 
-  h1(class="mb-4") Quản lý sản phẩm
+  h1(class="mb-4") Thùng rác
 
   .card.mb-3
     .card-header Bộ lọc và Tìm kiếm
@@ -26,7 +26,7 @@ block main
   .card.mb-3
     .card-header Hành động
     .card-body
-      +box-actions(`/${prefixAdmin}/products/change-multi`)
+      +box-actions2(`/${prefixAdmin}/recycleBin/change-multi`)
   
   .card.mb-3
     .card-header Danh sách
@@ -86,10 +86,13 @@ block main
                     button-change-status
                   ) Dừng hoạt động
               td
-                button(class="btn btn-warning btn-sm") Sửa
+                button(
+                  class="btn btn-warning btn-sm"
+                  button-restore=`/${prefixAdmin}/recycleBin/restore/${item.id}`
+                ) Khôi phục
                 button(
                   class="btn btn-danger btn-sm ml-1"
-                  button-delete=`/${prefixAdmin}/products/delete/${item.id}`
-                ) Xóa
+                  button-permanentlyDelete=`/${prefixAdmin}/recycleBin/permanentlyDelete/${item.id}`
+                ) Xóa hẳn
 
   +pagination(pagination)

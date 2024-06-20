@@ -2,10 +2,10 @@ const Product = require("../../models/product.model");
 
 const paginationHelper = require("../../helpers/pagination.helper");
 
-// [GET] /admin/products/
+// [GET] /admin/recycleBin/
 module.exports.index = async (req, res) => {
   const find = {
-    deleted: false
+    deleted: true
   };
 
   const filterStatus = [
@@ -50,7 +50,7 @@ module.exports.index = async (req, res) => {
 
   // console.log(products);
 
-  res.render("admin/pages/products/index", {
+  res.render("admin/pages/recycleBin/index", {
     pageTitle: "Quản lý sản phẩm",
     products: products,
     keyword: keyword,
@@ -59,39 +59,50 @@ module.exports.index = async (req, res) => {
   });
 }
 
-// [PATCH] /admin/products/change-status/:statusChange/:id
-module.exports.changeStatus = async (req, res) => {
-  const { id, statusChange } = req.params;
-
+// [PATCH] /admin/recycleBin/restore/:id
+module.exports.restore = async (req, res) => {
+  const id = req.params.id;
   await Product.updateOne({
     _id: id
   }, {
-    status: statusChange
+    deleted: false
   });
-
-  req.flash('success', 'cập nhật trạng thái thành công!');
-  
   res.json({
     code: 200
   });
 }
 
-// [PATCH] /admin/products/change-multi
+
+// [DELETE] /admin/recyleBin/permanentlyDelete/:id
+module.exports.permanentlyDelete = async (req, res) => {
+  const id = req.params.id;
+  await Product.deleteOne({
+    _id: id
+  });
+
+  res.json({
+    code: 200
+  });
+}
+
+// [PATCH] /admin/recycleBin/change-multi
 module.exports.changeMulti = async (req, res) => {
   const {status, ids} = req.body;
-  console.log(status)
-
   if(status == "active" || status == "inactive"){
-    await Product.updateMany({
-      _id : ids
-    }, {
-      status: status
-    })
-  }else if(status == "delete"){
     await Product.updateMany({
       _id: ids
     }, {
-      deleted: true
+      status: status
+    })
+  } else if(status == "restore"){
+    await Product.updateMany({
+      _id: ids
+    }, {
+      deleted: false
+    })
+  } else if(status == "delete"){
+    await Product.deleteMany({
+      _id: ids
     })
   }
 
@@ -99,32 +110,3 @@ module.exports.changeMulti = async (req, res) => {
     code: 200
   })
 }
-
-// [PATCH] /admin/products/delete/:id
-module.exports.deleteItem = async (req, res) => {
-  const id = req.params.id;
-  await Product.updateOne({
-    _id: id
-  }, {
-    deleted: true
-  });
-  res.json({
-    code: 200
-  });
-}
-
-// [PATCH] /admin/products/change-position/:id
-module.exports.changePosition = async (req, res) => {
-  const id = req.params.id;
-  const position = req.body.position;
-  console.log(position);
-  await Product.updateOne({
-    _id: id
-  }, {
-    position: position
-  });
-
-  res.json({
-    code: 200
-  })
-};

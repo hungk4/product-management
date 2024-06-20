@@ -1,5 +1,6 @@
 const dashboardRoute = require("./dashboard.route");
 const productRoute = require("./product.route");
+const recycleBinRoute = require("./recycleBin.route");
 const systemConfig = require("../../config/system");
 module.exports.index = (app) => {
 
@@ -9,4 +10,7 @@ module.exports.index = (app) => {
   
   // app.use("/admin/products", productRoute);
   app.use(`${path}/products`, productRoute);
+
+  // app.use("/admin/recycleBin", recycleBinRoute);
+  app.use(`${path}/recycleBin`, recycleBinRoute);
 }
