@@ -60,3 +60,11 @@
   display: none;
 }
 /* end show-alert */
+
+.image-preview{
+  width: 150px;
+  height: auto;
+  margin-top: 15px;
+  border: 1px solod #ddd;
+  border-radius: 5px;
+}
