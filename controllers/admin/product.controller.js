@@ -46,7 +46,7 @@ module.exports.index = async (req, res) => {
     .limit(pagination.limitItems)
     .skip(pagination.skip)
     .sort({
-      position: "desc"
+      position: "ascending"
     });
 
   // console.log(products);
