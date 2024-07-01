@@ -67,6 +67,9 @@ module.exports.restore = async (req, res) => {
   }, {
     deleted: false
   });
+
+  
+
   res.json({
     code: 200
   });
@@ -79,6 +82,8 @@ module.exports.permanentlyDelete = async (req, res) => {
   await Product.deleteOne({
     _id: id
   });
+
+  req.flash('success', "Đã xóa sản phẩm hoàn toàn");
 
   res.json({
     code: 200
@@ -105,7 +110,6 @@ module.exports.changeMulti = async (req, res) => {
       _id: ids
     })
   }
-
   res.json({
     code: 200
   })
