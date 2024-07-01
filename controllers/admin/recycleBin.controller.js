@@ -68,7 +68,7 @@ module.exports.restore = async (req, res) => {
     deleted: false
   });
 
-  
+  req.flash('success', "Đã khôi phục sản phẩm");
 
   res.json({
     code: 200
@@ -110,6 +110,9 @@ module.exports.changeMulti = async (req, res) => {
       _id: ids
     })
   }
+
+  req.flash('success', "thành công");
+
   res.json({
     code: 200
   })
