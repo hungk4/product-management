@@ -117,5 +117,3 @@ module.exports.changeMulti = async (req, res) => {
     code: 200
   })
 }
-
-console.log(module);
