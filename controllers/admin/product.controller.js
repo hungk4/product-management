@@ -184,9 +184,6 @@ module.exports.editPatch = async (req, res) => {
   try{
     const id = req.params.id;
 
-    if(req.file && req.file.filename) {
-      req.body.thumbnail = `/uploads/${req.file.filename}`
-    }
     req.body.price = parseInt(req.body.price);
     req.body.discountPercentage = parseInt(req.body.discountPercentage);
     req.body.stock = parseInt(req.body.stock);
