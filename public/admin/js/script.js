@@ -296,7 +296,6 @@ if(sort){
   // Thêm selected mặc định cho option
   const defaultSortKey = url.searchParams.get("sortKey");
   const defaultSortValue = url.searchParams.get("sortValue");
-  console.log(defaultSortKey+" "+defaultSortValue);
   if(defaultSortKey && defaultSortKey) {
     const optionSelected = select.querySelector(`option[value="${defaultSortKey}-${defaultSortValue}"]`);
     optionSelected.selected = true;
