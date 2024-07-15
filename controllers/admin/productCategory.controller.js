@@ -12,9 +12,13 @@ module.exports.index = async (req, res) => {
 }
 
 // [GET] /admin/products-category/create
-module.exports.create = (req, res) => {
+module.exports.create = async (req, res) => {
+  const categories = await ProductCategory.find({
+    deleted: false
+  })
   res.render("admin/pages/products-category/create.pug", {
-    pageTitle: "Thêm mới danh mục"
+    pageTitle: "Thêm mới danh mục",
+    categories: categories
   })
 }
 
