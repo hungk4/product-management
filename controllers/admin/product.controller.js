@@ -129,18 +129,23 @@ module.exports.deleteItem = async (req, res) => {
 
 // [PATCH] /admin/products/change-position/:id
 module.exports.changePosition = async (req, res) => {
-  const id = req.params.id;
-  const position = req.body.position;
-  console.log(position);
-  await Product.updateOne({
-    _id: id
-  }, {
-    position: position
-  });
-
-  res.json({
-    code: 200
-  })
+  try{
+    const id = req.params.id;
+    const position = req.body.position;
+    console.log(position);
+    await Product.updateOne({
+      _id: id
+    }, {
+      position: position
+    });
+  
+    res.json({
+      code: 200
+    })
+  } catch(error) {
+    res.redirect(`/${systemConfig.prefixAdmin}/products`);
+  }
+  
 };
 
 // [GET] /admin/products/create
@@ -182,12 +187,19 @@ module.exports.edit = async (req, res) => {
       _id: id, 
       deleted: false
     });
-    if(product)
+
+    if(product) {
+      const categories = await ProductCategory.find({
+        deleted: false
+      });
+      const newCategories = createTreeHelper(categories);
+
       res.render("admin/pages/products/edit", {
         pageTitle: "Chỉnh sửa sản phẩm",
-        product: product
-      });
-    else{
+        product: product,
+        categories: newCategories
+      })
+    } else{
       res.redirect(`/${systemConfig.prefixAdmin}/products`);
     }
   } catch (error) {
@@ -214,6 +226,7 @@ module.exports.editPatch = async (req, res) => {
       _id: id,
       deleted: false
     }, req.body);
+    req.flash("success", "cập nhật sản phẩm thành công")
   } catch(error){
     req.flash("error", "id sản phẩm không hợp lệ!")
   }
