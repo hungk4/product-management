@@ -207,7 +207,6 @@ module.exports.edit = async (req, res) => {
   }
 }
 
-
 // [PATCH] /admin/products/edit/:id
 module.exports.editPatch = async (req, res) => {
   try{
