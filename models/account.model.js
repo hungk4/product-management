@@ -19,6 +19,6 @@ const productSchema = new mongoose.Schema({
 
 const Account = mongoose.model("Account", productSchema, "accounts");
     
-module.exports = Product;
+module.exports = Account;
 
 
