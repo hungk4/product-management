@@ -34,8 +34,8 @@ module.exports.loginPost = async (req, res) => {
     res.redirect("back");
     return;
   }
-
-  res.cookie("token", account.token);
+  const expiresIn = new Date(Date.now() + 24 * 60 * 60 * 1000); // Cookie expires in 24 hours
+  res.cookie("token", account.token, { expires: expiresIn });
   res.redirect(`/${systemConfig.prefixAdmin}/dashboard`);
 }
 

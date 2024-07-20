@@ -73,78 +73,98 @@ module.exports.index = async (req, res) => {
 
 // [PATCH] /admin/products/change-status/:statusChange/:id
 module.exports.changeStatus = async (req, res) => {
-  const { id, statusChange } = req.params;
+  if(res.locals.role.permissions.includes("products_edit")){
+    const { id, statusChange } = req.params;
 
-  await Product.updateOne({
-    _id: id
-  }, {
-    status: statusChange
-  });
-
-  req.flash('success', 'cập nhật trạng thái thành công!');
+    await Product.updateOne({
+      _id: id
+    }, {
+      status: statusChange
+    });
   
-  res.json({
-    code: 200
-  });
+    req.flash('success', 'cập nhật trạng thái thành công!');
+    
+    res.json({
+      code: 200
+    });
+  }else{
+    res.send("403");
+  }
+  
 }
 
 // [PATCH] /admin/products/change-multi
 module.exports.changeMulti = async (req, res) => {
-  const {status, ids} = req.body;
-  console.log(status)
-
-  if(status == "active" || status == "inactive"){
-    await Product.updateMany({
-      _id : ids
-    }, {
-      status: status
-    })
-  }else if(status == "delete"){
-    await Product.updateMany({
-      _id: ids
-    }, {
-      deleted: true
-    })
-  }
-
-  res.json({
-    code: 200
-  })
-}
-
-// [PATCH] /admin/products/delete/:id
-module.exports.deleteItem = async (req, res) => {
-  const id = req.params.id;
-  await Product.updateOne({
-    _id: id
-  }, {
-    deleted: true
-  });
-
-  req.flash('success', 'Xóa sản phẩm thành công!');
-  res.json({
-    code: 200
-  });
-}
-
-// [PATCH] /admin/products/change-position/:id
-module.exports.changePosition = async (req, res) => {
-  try{
-    const id = req.params.id;
-    const position = req.body.position;
-    console.log(position);
-    await Product.updateOne({
-      _id: id
-    }, {
-      position: position
-    });
+  if(res.local.role.permissions.includes("products_edit")){
+    const {status, ids} = req.body;
+    console.log(status)
+  
+    if(status == "active" || status == "inactive"){
+      await Product.updateMany({
+        _id : ids
+      }, {
+        status: status
+      })
+    }else if(status == "delete"){
+      await Product.updateMany({
+        _id: ids
+      }, {
+        deleted: true
+      })
+    }
   
     res.json({
       code: 200
     })
-  } catch(error) {
-    res.redirect(`/${systemConfig.prefixAdmin}/products`);
+  } else{
+    res.send('403');
   }
+  
+}
+
+// [PATCH] /admin/products/delete/:id
+module.exports.deleteItem = async (req, res) => {
+  if(res.locals.role.permissions.includes("product_delete")){
+    const id = req.params.id;
+    await Product.updateOne({
+      _id: id
+    }, {
+      deleted: true
+    });
+  
+    req.flash('success', 'Xóa sản phẩm thành công!');
+    res.json({
+      code: 200
+    });
+  } else{
+    res.send(`403`);
+  }
+
+}
+
+// [PATCH] /admin/products/change-position/:id
+module.exports.changePosition = async (req, res) => {
+  if(res.locals.role.permissions.includes("products_edit")){
+    try{
+      const id = req.params.id;
+      const position = req.body.position;
+      console.log(position);
+      await Product.updateOne({
+        _id: id
+      }, {
+        position: position
+      });
+    
+      res.json({
+        code: 200
+      })
+    } catch(error) {
+      res.redirect(`/${systemConfig.prefixAdmin}/products`);
+    }
+  } else{
+    res.send(`403`);
+  }
+  
   
 };
 
@@ -163,20 +183,25 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/products/create
 module.exports.createPost = async (req, res) => {
-  req.body.price = parseInt(req.body.price);
-  req.body.discountPercentage = parseInt(req.body.discountPercentage);
-  req.body.stock = parseInt(req.body.stock);
-  if(req.body.position){
-    req.body.position = parseInt(req.body.position);
+  if(res.locals.role.permissions.includes("products_create")){
+    req.body.price = parseInt(req.body.price);
+    req.body.discountPercentage = parseInt(req.body.discountPercentage);
+    req.body.stock = parseInt(req.body.stock);
+    if(req.body.position){
+      req.body.position = parseInt(req.body.position);
+    } else{
+      const countProducts = await Product.countDocuments({});
+      req.body.position = countProducts + 1;
+    }
+    
+    const newProduct = new Product(req.body);
+    await newProduct.save();
+  
+    res.redirect(`/${systemConfig.prefixAdmin}/products`);    
   } else{
-    const countProducts = await Product.countDocuments({});
-    req.body.position = countProducts + 1;
+    res.send(`403`);
   }
   
-  const newProduct = new Product(req.body);
-  await newProduct.save();
-
-  res.redirect(`/${systemConfig.prefixAdmin}/products`);
 }
 
 // [GET] /admin/products/edit/:id
@@ -209,28 +234,33 @@ module.exports.edit = async (req, res) => {
 
 // [PATCH] /admin/products/edit/:id
 module.exports.editPatch = async (req, res) => {
-  try{
-    const id = req.params.id;
-
-    req.body.price = parseInt(req.body.price);
-    req.body.discountPercentage = parseInt(req.body.discountPercentage);
-    req.body.stock = parseInt(req.body.stock);
-    if(req.body.position){
-      req.body.position = parseInt(req.body.position);
+  if(res.locals.role.permissions.includes("products_edit")){
+    try{
+      const id = req.params.id;
+  
+      req.body.price = parseInt(req.body.price);
+      req.body.discountPercentage = parseInt(req.body.discountPercentage);
+      req.body.stock = parseInt(req.body.stock);
+      if(req.body.position){
+        req.body.position = parseInt(req.body.position);
+      }
+      else{
+        req.body.position = await Product.countDocuments({}) + 1;
+      }
+      await Product.updateOne({
+        _id: id,
+        deleted: false
+      }, req.body);
+      req.flash("success", "cập nhật sản phẩm thành công")
+    } catch(error){
+      req.flash("error", "id sản phẩm không hợp lệ!")
     }
-    else{
-      req.body.position = await Product.countDocuments({}) + 1;
-    }
-    await Product.updateOne({
-      _id: id,
-      deleted: false
-    }, req.body);
-    req.flash("success", "cập nhật sản phẩm thành công")
-  } catch(error){
-    req.flash("error", "id sản phẩm không hợp lệ!")
+  
+    res.redirect("back");
+  } else{
+    res.send(`403`);
   }
 
-  res.redirect("back");
 }
 
 // [GET] /admin/products/detail/:id
