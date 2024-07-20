@@ -4,6 +4,7 @@ const recycleBinRoute = require("./recycleBin.route");
 const productsCategoryRoute = require("./productCategory.route");
 const roleRoute = require("./role.route");
 const accountsRoute = require("./accounts.route");
+const authRoute = require("./auth.route");
 
 const systemConfig = require("../../config/system");
 module.exports.index = (app) => {
@@ -21,4 +22,6 @@ module.exports.index = (app) => {
   app.use(`${path}/roles`, roleRoute);
 
   app.use(`${path}/accounts`, accountsRoute);
+
+  app.use(`${path}/auth`, authRoute);
 }
