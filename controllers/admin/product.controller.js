@@ -97,6 +97,27 @@ module.exports.index = async (req, res) => {
 
 // [PATCH] /admin/products/change-status/:statusChange/:id
 module.exports.changeStatus = async (req, res) => {
+  try{
+    if(res.locals.role.permissions.includes("products_edit")){
+      const { id, statusChange } = req.params;
+  
+      await Product.updateOne({
+        _id: id
+      }, {
+        status: statusChange
+      });
+    
+      req.flash('success', 'cập nhật trạng thái thành công!');
+      
+      res.json({
+        code: 200
+      });
+    }else{
+      res.send("403");
+    }
+  } catch(error) {
+    req.flash("error", "id sản phẩm không hợp lệ!")
+  }
   if(res.locals.role.permissions.includes("products_edit")){
     const { id, statusChange } = req.params;
 
@@ -148,7 +169,7 @@ module.exports.changeMulti = async (req, res) => {
 
 // [PATCH] /admin/products/delete/:id
 module.exports.deleteItem = async (req, res) => {
-  if(true /*res.locals.role.permissions.includes("product_delete"*/){
+  if(res.locals.role.permissions.includes("products_delete")){
     const id = req.params.id;
     await Product.updateOne({
       _id: id
