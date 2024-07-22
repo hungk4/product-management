@@ -63,6 +63,7 @@ module.exports.index = async (req, res) => {
     .sort(sort);
 
   for(const item of products) {
+    // Người tạo
     if(item.createdBy){
       const accountCreated = await Account.findOne({
         _id: item.createdBy
@@ -73,9 +74,18 @@ module.exports.index = async (req, res) => {
     }
 
     item.createdAtFormat = moment(item.createdAt).format("DD/MM/YY HH:mm:ss");
+
+    if(item.updatedBy) {
+      const accountUpdated = await Account.findOne({
+        _id: item.updatedBy
+      });
+      item.updatedByFullName = accountUpdated.fullName;
+    } else {
+      item.updatedByFullName = "";
+    }
+    item.updatedAtFormat = moment(item.updatedAt).format("DD/MM/YY HH:mm:ss");
   }
 
-  console.log(products);
   res.render("admin/pages/products/index", {
     pageTitle: "Quản lý sản phẩm",
     products: products,
@@ -261,6 +271,8 @@ module.exports.editPatch = async (req, res) => {
       else{
         req.body.position = await Product.countDocuments({}) + 1;
       }
+
+      req.body.updatedBy =  res.locals.account.id;
       await Product.updateOne({
         _id: id,
         deleted: false
