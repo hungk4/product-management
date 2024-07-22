@@ -1,4 +1,6 @@
 const Product = require("../../models/product.model");
+const Account = require("../../models/account.model");
+const moment = require("moment");
 
 const paginationHelper = require("../../helpers/pagination.helper");
 
@@ -47,8 +49,19 @@ module.exports.index = async (req, res) => {
     .sort({
       position: "desc"
     });
+  for(const item of products){
+    if(item.deletedBy){
+      const accountDeleted =  await Account.findOne({
+        _id: item.deletedBy
+      });
+      item.deletedByFullName = accountDeleted.fullName;
+    } else{
+      item.deletedByFullName = "";
+    }
 
-  // console.log(products);
+    item.deletedAtFormat = moment(item.deletedAt).format("DD/MM/YY HH:mm:ss");
+
+  }
 
   res.render("admin/pages/recycleBin/index", {
     pageTitle: "Quản lý sản phẩm",
