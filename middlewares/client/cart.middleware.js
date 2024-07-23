@@ -13,7 +13,7 @@ module.exports.cartId = async (req, res, next) => {
       { 
         expires: new Date(Date.now() + expires)
       });
-
-    next();
   }
+  
+  next();
 }

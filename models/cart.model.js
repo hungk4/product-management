@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
-const cartSchema  = new mongoose.Schema({
+const cartSchema = new mongoose.Schema({
   products: [
     {
-    productId: String,
-    quantity: Number
+      productId: String,
+      quantity: Number
     }
   ]
 }, {
