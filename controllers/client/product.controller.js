@@ -84,6 +84,8 @@ module.exports.detail = async (req, res) => {
             deleted: false,
             status: "active"
         })
+        const priceNew = (1 - product.discountPercentage / 100) * product.price;
+        product.priceNew = priceNew;
         if(product){
             res.render("client/pages/products/detail.pug", {
                 pageTitle: "Chi tiết sản phẩm",
