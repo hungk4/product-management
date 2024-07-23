@@ -1,4 +1,5 @@
 const Product = require("../../models/product.model");
+
 // [GET] /search
 module.exports.index = async (req, res) => {
   const keyword = req.query.keyword;
@@ -18,7 +19,10 @@ module.exports.index = async (req, res) => {
       item.priceNew = ((1 - item.discountPercentage/100) * item.price).toFixed(0);
     }
   }
-  res.render("client/pages/search/index.pug", {
-    pageTitle: "Tìm kiếm"
-  })
+
+  res.render("client/pages/search/index", {
+    pageTitle: "Tìm kiếm",
+    keyword: keyword,
+    products: products
+  });
 }

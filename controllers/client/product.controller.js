@@ -79,13 +79,17 @@ module.exports.category = async (req, res) => {
 module.exports.detail = async (req, res) => {
     try{
         const slug = req.params.slug;
+
         const product = await Product.findOne({
             slug: slug,
             deleted: false,
             status: "active"
         })
-        const priceNew = (1 - product.discountPercentage / 100) * product.price;
+
+        const priceNew = ((1 - product.discountPercentage / 100) * product.price).toFixed(0);
+
         product.priceNew = priceNew;
+        
         if(product){
             res.render("client/pages/products/detail.pug", {
                 pageTitle: "Chi tiết sản phẩm",
