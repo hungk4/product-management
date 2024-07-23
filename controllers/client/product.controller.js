@@ -2,14 +2,17 @@ const Product = require("../../models/product.model");
 
 // [GET] /products/
 module.exports.index = async (req, res) => {
-    const products = await Product
+    const productsFeatured = await Product
         .find({
+            featured: "1",
             status: "active",
             deleted: false
         })
         .sort({
             position: "desc"
-        });
+        })
+        .limit(6)
+        .select("-description");
     
     for(const item of products){
         item.priceNew = ((1 - item.discountPercentage/100) * item.price).toFixed(0);
@@ -19,12 +22,12 @@ module.exports.index = async (req, res) => {
 
     res.render("client/pages/products/index.pug", {
         pageTitle: "Danh sách sản phẩm",
-        products: products 
+        products: products,
+        productsFeatured: productsFeatured
     });
 }
 
 // [GET] /products/:slug
-
 module.exports.detail = async (req, res) => {
     try{
         const slug = req.params.slug;
