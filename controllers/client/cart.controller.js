@@ -85,6 +85,8 @@ module.exports.delete = async (req, res) => {
     }
   })
 
+  req.flash("error", "Xóa sản phẩm thành công!");
+
   res.redirect("back");
 }
 
