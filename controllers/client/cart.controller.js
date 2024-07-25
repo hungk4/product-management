@@ -74,7 +74,7 @@ module.exports.delete = async (req, res) => {
   const cartId = req.cookies.cartId;
 
   // $pull để xóa đi 1 phẩn tử của mảng trong 1 object
-  
+
   await Cart.updateOne({
     _id: cartId
   }, {
@@ -86,4 +86,27 @@ module.exports.delete = async (req, res) => {
   })
 
   res.redirect("back");
+}
+
+// [GET] /cart/update/:productId/:quantity
+module.exports.update = async (req, res) => {
+  try{
+    const cartId = req.cookies.cartId;
+    const productId = req.params.productId;
+    const quantity = parseInt(req.params.quantity);
+  
+    await Cart.updateOne({
+      _id: cartId,
+      'products.productId': productId
+    }, {
+      $set: {
+        'products.$.quantity': quantity
+      }
+    })
+    req.flash("success", "Cập nhật số lượng thành công!");
+  } catch (error) {
+    req.flash("error", "id sai !");
+  }
+  res.redirect("back");
+
 }
