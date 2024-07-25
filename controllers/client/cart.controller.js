@@ -23,7 +23,7 @@ module.exports.index = async (req, res) => {
     }
   }
 
-  res.render("client/pages/cart/index", {
+  res.render("client/pages/cart/index",{
     pageTitle: "Giỏ hàng",
     cartDetail: cart
   });
@@ -65,5 +65,25 @@ module.exports.addPost = async (req, res) => {
     });
   }
   req.flash("success", "Đặt hàng thành công!");
+  res.redirect("back");
+}
+
+// [GET] /cart/delete/:productId
+module.exports.delete = async (req, res) => {
+  const productId = req.params.productId;
+  const cartId = req.cookies.cartId;
+
+  // $pull để xóa đi 1 phẩn tử của mảng trong 1 object
+  
+  await Cart.updateOne({
+    _id: cartId
+  }, {
+    $pull: {
+      products: {
+        productId: productId
+      }
+    }
+  })
+
   res.redirect("back");
 }
