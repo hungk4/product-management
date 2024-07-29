@@ -75,3 +75,32 @@ module.exports.editPatch = async (req, res) => {
   req.flash("success", "Cập nhật danh mục thành công!");
   res.redirect("back");
 }
+
+// [GET] /admin/product-category/detail/:id
+module.exports.detail = async (req, res) => {
+  const id = req.params.id;
+  const category = await ProductCategory.findOne({
+    _id: id,
+    deleted: false
+  });
+
+  const categories = await ProductCategory.find({
+    deleted: false
+  });
+  const newCategories = createTreeHelper(categories);
+
+  let categoryDad = ""
+  if(category.parent_id)
+    categoryDad = await ProductCategory.findOne({
+      _id: category.parent_id,
+      deleted: false
+    });
+
+  console.log(categoryDad);
+  res.render("admin/pages/products-category/detail.pug", {
+    pageTitle: "Chi tiết danh mục sản phẩm",
+    category: category,
+    categories: newCategories,
+    categoryDad: categoryDad
+  })
+}
