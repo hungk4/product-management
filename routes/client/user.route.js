@@ -23,4 +23,6 @@ router.post("/password/otp", controller.otpPost)
 
 router.get("/password/reset", controller.resetPassword);
 
+router.patch("/password/reset", controller.resetPasswordPatch);
+
 module.exports = router;

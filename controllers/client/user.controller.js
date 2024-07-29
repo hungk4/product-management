@@ -166,3 +166,16 @@ module.exports.resetPassword = async (req, res) => {
     pageTitle: "Đổi mật khẩu mới"
   });
 };
+
+// [POST] /user/password/reset
+module.exports.resetPasswordPatch = async (req, res) => {
+  const tokenUser = req.cookies.tokenUser;
+  const password = md5(req.body.password);
+  await User.updateOne({
+    tokenUser: tokenUser,
+    deleted: false
+  }, {
+    password: password
+  });
+  res.redirect("/")
+};
