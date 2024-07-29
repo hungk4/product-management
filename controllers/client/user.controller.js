@@ -37,3 +37,46 @@ module.exports.registerPost = async (req, res) => {
   req.flash("success", "Đăng kí tài khoản thành công");
   res.redirect("/");
 }
+
+// [GET] /user/login
+module.exports.login = async (req, res) => {
+  res.render("client/pages/user/login.pug", {
+    pageTitle: "Đăng nhập"
+  })
+}
+
+// [POST] /user/login
+module.exports.loginPost = async (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const tokenUser = md5(password);
+
+  const exitstUser = await User.findOne({
+    email: email,
+    deleted: false
+  });
+  
+  if(!exitstUser){
+    req.flash("error", "Không tồn tại email!");
+    res.redirect("back");
+    return;
+  }
+
+  if(exitstUser.password != md5(password)) {
+    req.flash("error", "Sai mật khẩu!");
+    res.redirect("back");
+    return;
+  }
+
+  if(exitstUser.status != "active") {
+    req.flash("error", "Tài khoản đang bị khóa!");
+    res.redirect("back");
+    return;
+  }
+
+  const expiresIn = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // / Cookie expires in 30 days;
+  res.cookie("token", exitstUser.tokenUser, {expires: expiresIn});
+
+  req.flash("success", "Đăng nhập thành công!");
+  res.redirect("/");
+}
