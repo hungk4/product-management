@@ -75,8 +75,14 @@ module.exports.loginPost = async (req, res) => {
   }
 
   const expiresIn = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // / Cookie expires in 30 days;
-  res.cookie("token", exitstUser.tokenUser, {expires: expiresIn});
+  res.cookie("tokenUser", exitstUser.tokenUser, {expires: expiresIn});
 
   req.flash("success", "Đăng nhập thành công!");
   res.redirect("/");
+}
+
+// [GET] /user/logout
+module.exports.logout = async (req, res) => {
+  res.clearCookie("tokenUser");
+  res.redirect("/user/login");
 }
