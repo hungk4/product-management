@@ -148,5 +148,17 @@ module.exports.detail = async (req, res) => {
   } else{
     res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
   }
-  
 };
+
+module.exports.delete = async (req, res) => {
+  const id = req.params.id;
+  await Account.deleteOne({
+    _id: id
+  });
+
+  req.flash('success', "Đã xóa tài khoản hoàn toàn !");
+
+  res.json({
+    code: 200
+  });
+}
