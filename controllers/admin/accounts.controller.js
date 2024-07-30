@@ -95,3 +95,27 @@ module.exports.editPatch = async (req, res) => {
     res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
   }
 }
+
+module.exports.changeStatus = async (req, res) => {
+  try{
+    if(res.locals.role.permissions.includes("accounts_edit")){
+      const { id, statusChange } = req.params;
+  
+      await Account.updateOne({
+        _id: id
+      }, {
+        status: statusChange
+      });
+    
+      req.flash('success', 'cập nhật trạng thái thành công!');
+      
+      res.json({
+        code: 200
+      });
+    }else{
+      res.send("403");
+    }
+  } catch(error) {
+    req.flash("error", "id sản phẩm không hợp lệ!")
+}
+}

@@ -20,5 +20,6 @@ router.patch("/edit/:id",
   uploadCloud.uploadSingle, 
   controller.editPatch
 );
+router.patch("/change-status/:statusChange/:id", controller.changeStatus);
 
 module.exports = router;  
