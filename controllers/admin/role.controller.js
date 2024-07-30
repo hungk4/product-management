@@ -62,7 +62,7 @@ module.exports.editPatch = async (req, res) => {
 
 // [GET /admin/roles/permissions
 module.exports.permissions = async (req, res) => {
-  const records = await Role.find({deleted: false})
+  const records = await Role.find({deleted: false});
   res.render("admin/pages/roles/permission.pug", {
     pageTitle: "Phân quyền",
     records: records
@@ -85,4 +85,36 @@ module.exports.permissionsPatch = async (req, res) => {
     code: 200,
     message: "Cập nhật thành công!"
   });
+}
+
+// [GET] /admin/roles/detail/:id
+module.exports.detail = async (req, res) => {
+  const record = await Role.findOne({
+    _id: req.params.id,
+    deleted: false
+  })
+  res.render("admin/pages/roles/detail.pug", {
+    pageTitle: "Chi tiết nhóm quyền",
+    record: record
+  })
+}
+
+// [PATCH] /admin/roles/delete/:id
+module.exports.delete = async (req, res) => {
+  if(res.locals.role.permissions.includes("roles_delete")){
+    const id = req.params.id;
+    await Role.updateOne({
+      _id: id
+    }, {
+      deleted: true,
+      deletedBy: res.locals.account.id,
+      deletedAt: new Date()
+    });
+    req.flash('success', 'Xóa nhóm quyền thành công!');
+    res.json({
+      code: 200
+    });
+  } else{
+    res.send(`403`);
+  }
 }
