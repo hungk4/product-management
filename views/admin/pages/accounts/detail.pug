@@ -1,0 +1,15 @@
+extends ../../layouts/default.pug
+
+block main
+  if(accountRole.title)
+    h4(class="mb-4") Loại tài khoản: #{accountRole.title}
+  if(account.fullName)
+    div(class="mb-4") Tên: #{account.fullName}
+  if(account.email)
+    div(class="mb-4") Email: #{account.email}  
+  if (account.avatar)
+    div(class="mb-4")
+      img(
+        src=account.avatar
+        style="width: 100px"
+      )

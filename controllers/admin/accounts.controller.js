@@ -119,3 +119,34 @@ module.exports.changeStatus = async (req, res) => {
     req.flash("error", "id sản phẩm không hợp lệ!")
 }
 }
+
+module.exports.detail = async (req, res) => {
+  if(res.locals.role.permissions.includes("accounts_view")){
+    try{
+      const id = req.params.id;
+      const account = await Account.findOne({
+        _id: id,
+        deleted: false
+      });
+      if(account) {
+        const accountRole = await Role.findOne({
+          _id: account.role_id,
+          deleted: false
+        }).select("title");
+      
+        res.render("admin/pages/accounts/detail.pug", {
+          pageTitle: "Chi tiết tài khoản",
+          account: account,
+          accountRole: accountRole
+        });
+      } else {
+        res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+      }
+    } catch(error){
+      res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+    }
+  } else{
+    res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+  }
+  
+};
