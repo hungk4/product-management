@@ -165,6 +165,7 @@ if(listButtonDelete.length > 0){
   listButtonDelete.forEach(button => {
     button.addEventListener("click", () => {
       const link = button.getAttribute("button-delete");
+      console.log(link);
       fetch(link, {
         method: "PATCH"
       })

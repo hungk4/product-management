@@ -167,7 +167,6 @@ module.exports.deleteItem = async (req, res) => {
   } else{
     res.send(`403`);
   }
-
 }
 
 // [PATCH] /admin/products/change-position/:id
@@ -297,7 +296,10 @@ module.exports.editPatch = async (req, res) => {
 module.exports.detail = async (req, res) => {
   try{
     const id = req.params.id;
-    const product = await Product.findOne({_id: id});
+    const product = await Product.findOne({
+      _id: id,
+      deleted: false
+    });
     if(product) {
       res.render("admin/pages/products/detail", {
         pageTitle: "Chi tiết sản phẩm",

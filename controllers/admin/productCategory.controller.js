@@ -6,7 +6,7 @@ const createTreeHelper = require("../../helpers/createTree.helper");
 module.exports.index = async (req, res) => {
   const records = await ProductCategory.find({
     deleted: false
-  }) 
+  });
   res.render("admin/pages/products-category/index.pug",{
     pageTitle: "Danh mục sản phẩm",
     records: records
@@ -76,31 +76,58 @@ module.exports.editPatch = async (req, res) => {
   res.redirect("back");
 }
 
-// [GET] /admin/product-category/detail/:id
+// [GET] /admin/products-category/detail/:id
 module.exports.detail = async (req, res) => {
-  const id = req.params.id;
-  const category = await ProductCategory.findOne({
-    _id: id,
-    deleted: false
-  });
+  if(res.locals.role.permissions.includes("products-category_view")){
+    try{
+      const id = req.params.id;
+      const category = await ProductCategory.findOne({
+        _id: id
+      });
+      
+      const categories = await ProductCategory.find({
+        deleted: false
+      });
+      const newCategories = createTreeHelper(categories);
 
-  const categories = await ProductCategory.find({
-    deleted: false
-  });
-  const newCategories = createTreeHelper(categories);
+      let categoryDad = "";
+      if(category.parent_id)
+        categoryDad = await ProductCategory.findOne({
+          _id: category.parent_id,
+          deleted: false
+        });
 
-  let categoryDad = ""
-  if(category.parent_id)
-    categoryDad = await ProductCategory.findOne({
-      _id: category.parent_id,
-      deleted: false
+      res.render("admin/pages/products-category/detail.pug", {
+        pageTitle: "Chi tiết danh mục sản phẩm",
+        category: category,
+        categories: newCategories,
+        categoryDad: categoryDad
+      });
+    } catch(error) {
+
+    }
+  } else{
+    res.send(`403`);
+  }
+}
+
+// [PATCH] /admin/products-category/delete/:id
+module.exports.deleteItem = async (req, res) => {
+  if(res.locals.role.permissions.includes("products-category_delete")){
+    const id = req.params.id;
+    await ProductCategory.updateOne({
+      _id: id
+    }, {
+      deleted: true,
+      deletedBy: res.locals.account.id,
+      deletedAt: new Date()
     });
+    req.flash('success', 'Xóa danh mục thành công!');
+    res.json({
+      code: 200
+    });
+  } else{
+    res.send(`403`);
+  }
 
-  console.log(categoryDad);
-  res.render("admin/pages/products-category/detail.pug", {
-    pageTitle: "Chi tiết danh mục sản phẩm",
-    category: category,
-    categories: newCategories,
-    categoryDad: categoryDad
-  })
 }
