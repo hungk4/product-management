@@ -12,6 +12,8 @@ const productCategorySchema = new mongoose.Schema({
   description: String,
   thumbnail: String,
   position: Number,
+  createdBy: String,
+  updatedBy: String,
   status: String,
   deleted: {
     type: Boolean,
