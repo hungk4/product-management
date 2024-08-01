@@ -170,7 +170,7 @@ module.exports.resetPassword = async (req, res) => {
   });
 };
 
-// [POST] /user/password/reset
+// [PATCH] /user/password/reset
 module.exports.resetPasswordPatch = async (req, res) => {
   const tokenUser = req.cookies.tokenUser;
   const password = md5(req.body.password);
@@ -189,3 +189,48 @@ module.exports.profile = async (req, res) => {
     pageTitle: "Thông tin cá nhân"
   });
 };
+
+// [GET] /user/password/edit
+module.exports.edit = async (req, res) => {
+  res.render("client/pages/user/edit-password", {
+    pageTitle: "Sửa mật khẩu"
+  })
+}
+
+module.exports.editPatch = async (req, res) => {
+  try {
+    const tokenUser = req.cookies.tokenUser;
+    const user = await User.findOne({
+      tokenUser: tokenUser,
+      deleted: false
+    });
+    const oldPassword = md5(req.body.oldPassword);
+    const newPassword1 = md5(req.body.newPassword1);
+    const newPassword2 = md5(req.body.newPassword2);
+  
+    if(oldPassword != user.password){
+      req.flash("error", "Mật khẩu cũ sai!");
+      res.redirect("back");
+      return;
+    }
+  
+    if(newPassword1 != newPassword2) {
+      req.flash("error", "Mật khẩu mới nhập sai!");
+      res.redirect("back");
+      return;
+    }
+    
+    await User.updateOne({
+      tokenUser: tokenUser,
+      deleted: false
+    }, {
+      password : newPassword1
+    });
+  
+    req.flash("success", "Đổi mật khẩu thành công!");
+    res.redirect("back");
+  } catch(error){
+    res.redirect("back");
+  }
+ 
+}

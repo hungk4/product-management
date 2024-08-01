@@ -2,25 +2,26 @@ extends ../../layouts/default.pug
 include ../../mixins/select-tree.pug
 
 block main
-  if (category.title)
-    h1(class="mb-4") #{category.title}
-  if(categoryDad)
-    div(class="mb-4") Danh mục cha: #{categoryDad.title}
-  else 
-    div(class="mb-4") Danh mục cha: ---
-  if (category.thumbnail)
-    div(class="mb-4")
-      img(
-        src=category.thumbnail
-        style="width: 100px"
-      )
-  if (category.status)
-    div(class="mb-4")
-      span Trạng thái:
-      if (category.status === "active")
-        span(class="badge badge-success") Hoạt động
-      else
-        span(class="badge badge-danger") Dừng hoạt động
+   if(role.permissions.includes("products-category_view"))
+    if (category.title)
+      h1(class="mb-4") #{category.title}
+    if(categoryDad)
+      div(class="mb-4") Danh mục cha: #{categoryDad.title}
+    else 
+      div(class="mb-4") Danh mục cha: ---
+    if (category.thumbnail)
+      div(class="mb-4")
+        img(
+          src=category.thumbnail
+          style="width: 100px"
+        )
+    if (category.status)
+      div(class="mb-4")
+        span Trạng thái:
+        if (category.status === "active")
+          span(class="badge badge-success") Hoạt động
+        else
+          span(class="badge badge-danger") Dừng hoạt động
 
 
    

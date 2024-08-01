@@ -7,5 +7,7 @@ block main
       .col-12
         +box-head("Thông tin tài khoản")
 
-        div #{user.fullName}
-        div #{user.email}
+        div(class="mb-3") Họ tên: #{user.fullName}
+        div(class="mb-3") Email: #{user.email}
+
+        a(href="/user/password/edit") Đổi mật khẩu

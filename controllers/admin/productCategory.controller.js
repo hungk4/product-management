@@ -3,6 +3,7 @@ const Account = require("../../models/account.model");
 const systemConfig = require("../../config/system");
 const createTreeHelper = require("../../helpers/createTree.helper");
 const moment = require("moment");
+
 // [GET] /admin/products-category/
 module.exports.index = async (req, res) => {
   const records = await ProductCategory.find({
@@ -51,17 +52,22 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/products-category/create
 module.exports.createPost = async (req, res) => {
-  if(req.body.position) {
-    req.body.position = parseInt(req.body.position);
-  } else{
-    const countCategory = await ProductCategory.countDocuments({});
-    req.body.position = countCategory + 1;
+  if(res.locals.role.permissions.includes("products-category_create")){
+    if(req.body.position) {
+      req.body.position = parseInt(req.body.position);
+    } else{
+      const countCategory = await ProductCategory.countDocuments({});
+      req.body.position = countCategory + 1;
+    }
+    req.body.createdBy = res.locals.account.id;
+    const newCategory = new ProductCategory(req.body);
+    await newCategory.save();
+  
+    res.redirect(`/${systemConfig.prefixAdmin}/products-category`);
+  } else {
+    res.send(`403`);
   }
-  req.body.createdBy = res.locals.account.id;
-  const newCategory = new ProductCategory(req.body);
-  await newCategory.save();
-
-  res.redirect(`/${systemConfig.prefixAdmin}/products-category`);
+  
 }
 
 // [GET] /admin/products-category/edit/:id
@@ -85,21 +91,30 @@ module.exports.edit = async (req, res) => {
 
 // [PATCH] /admin/products-category/edit/:id
 module.exports.editPatch = async (req, res) => {
-  const id = req.params.id;
-  if(req.body.position){
-    req.body.position = parseInt(req.body.position);
-  } else{
-    const countCagegory = await ProductCategory.countDocuments({});
-    req.body.position = countCagegory + 1;
+  if(res.locals.role.permissions.includes("products-category_edit")){
+    try{
+      const id = req.params.id;
+      if(req.body.position){
+        req.body.position = parseInt(req.body.position);
+      } else{
+        const countCagegory = await ProductCategory.countDocuments({});
+        req.body.position = countCagegory + 1;
+      }
+      req.body.updatedBy = res.locals.account.id;
+      await ProductCategory.updateOne({
+        _id:id,
+        deleted: false
+      }, req.body);
+    
+      req.flash("success", "Cập nhật danh mục thành công!");
+      res.redirect("back");
+    } catch (error){
+      res.redirect("back");
+    }
+  } else {
+    res.send(`403`);
   }
-  req.body.updatedBy = res.locals.account.id;
-  await ProductCategory.updateOne({
-    _id:id,
-    deleted: false
-  }, req.body);
-
-  req.flash("success", "Cập nhật danh mục thành công!");
-  res.redirect("back");
+ 
 }
 
 // [GET] /admin/products-category/detail/:id
@@ -140,18 +155,22 @@ module.exports.detail = async (req, res) => {
 // [PATCH] /admin/products-category/delete/:id
 module.exports.deleteItem = async (req, res) => {
   if(res.locals.role.permissions.includes("products-category_delete")){
-    const id = req.params.id;
-    await ProductCategory.updateOne({
-      _id: id
-    }, {
-      deleted: true,
-      deletedBy: res.locals.account.id,
-      deletedAt: new Date()
-    });
-    req.flash('success', 'Xóa danh mục thành công!');
-    res.json({
-      code: 200
-    });
+    try {
+      const id = req.params.id;
+      await ProductCategory.updateOne({
+        _id: id
+      }, {
+        deleted: true,
+        deletedBy: res.locals.account.id,
+        deletedAt: new Date()
+      });
+      req.flash('success', 'Xóa danh mục thành công!');
+      res.json({
+        code: 200
+      });
+    } catch(error){
+      res.redirect("back");
+    }
   } else{
     res.send(`403`);
   }
