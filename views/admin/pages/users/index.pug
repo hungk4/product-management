@@ -21,7 +21,6 @@ block main
             th STT
             th Avatar
             th Họ tên
-            th Phân quyền
             th Email
             th Trạng thái
             th Hành động
@@ -38,19 +37,18 @@ block main
                   height="auto"
                 )
               td #{item.fullName}
-              td #{item.roleTitle}
               td #{item.email}
               td
                 if (item.status === "active")
                   button(
-                    link=`/${prefixAdmin}/accounts/change-status/inactive/${item.id}`
+                    link=`/${prefixAdmin}/users/change-status/inactive/${item.id}`
                     class="badge badge-success"
                     data-status="active"
                     button-change-status
                   ) Hoạt động
                 else
                   button(
-                    link=`/${prefixAdmin}/accounts/change-status/active/${item.id}`
+                    link=`/${prefixAdmin}/users/change-status/active/${item.id}`
                     class="badge badge-danger"
                     data-status="inactive"
                     button-change-status
