@@ -176,3 +176,51 @@ module.exports.deleteItem = async (req, res) => {
   }
 
 }
+
+// [PATCH] /admin/products-category/change-status/:statusChange/:id
+module.exports.changeStatus = async (req, res) => {
+  try{
+    if(res.locals.role.permissions.includes("products-category_edit")){
+      const { id, statusChange } = req.params;
+  
+      await ProductCategory.updateOne({
+        _id: id
+      }, {
+        status: statusChange
+      });
+    
+      req.flash('success', 'cập nhật trạng thái thành công!');
+      
+      res.json({
+        code: 200
+      });
+    }else{
+      res.send("403");
+    }
+  } catch(error) {
+    req.flash("error", "id sản phẩm không hợp lệ!")
+}
+}
+
+// [PATCH] /admin/products-category/change-position/:id
+module.exports.changePosition = async (req, res) => {
+  if(res.locals.role.permissions.includes("products-category_edit")){
+    try{
+      const id = req.params.id;
+      const position = req.body.position;
+      await ProductCategory.updateOne({
+        _id: id
+      }, {
+        position: position
+      });
+      req.flash("success", "Cập nhật vị trí thành công!");
+      res.json({
+        code: 200
+      })
+    } catch(error) {
+      res.redirect(`/${systemConfig.prefixAdmin}/products-category`);
+    }
+  } else{
+    res.send(`403`);
+  }
+};

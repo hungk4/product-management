@@ -44,6 +44,7 @@ block main
                 if(role.permissions.includes("products-category_edit"))
                   td
                     input(
+                      link=`/${prefixAdmin}/products-category/change-position/${item.id}`
                       type="number"
                       value=item.position
                       style="width: 60px"
@@ -52,16 +53,16 @@ block main
                     )
                   td
                     if (item.status === "active")
-                      a(
-                        href="javascript:;"
+                      button(
+                        link=`/${prefixAdmin}/products-category/change-status/inactive/${item.id}`
                         class="badge badge-success"
                         data-status="active"
                         data-id=item.id
                         button-change-status
                       ) Hoạt động
                     else
-                      a(
-                        href="javascript:;"
+                      button(
+                        link=`/${prefixAdmin}/products-category/change-status/active/${item.id}`
                         class="badge badge-danger"
                         data-status="inactive"
                         data-id=item.id

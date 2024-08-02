@@ -175,13 +175,12 @@ module.exports.changePosition = async (req, res) => {
     try{
       const id = req.params.id;
       const position = req.body.position;
-      console.log(position);
       await Product.updateOne({
         _id: id
       }, {
         position: position
       });
-    
+      req.flash("success", "Cập nhật vị trí thành công!");
       res.json({
         code: 200
       })
@@ -191,8 +190,6 @@ module.exports.changePosition = async (req, res) => {
   } else{
     res.send(`403`);
   }
-  
-  
 };
 
 // [GET] /admin/products/create
