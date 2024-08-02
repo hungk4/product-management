@@ -1,6 +1,7 @@
 extends ../../layouts/default.pug
 
 block main
-  h1(class="mb-4") Chỉnh sửa nhóm quyền
-  div(class="mb-4") #{record.title}
-  div(class="mb-4") #{record.description}
+  if(role.permissions.includes("roles_view"))
+    h1(class="mb-4") Chỉnh sửa nhóm quyền
+    div(class="mb-4") #{record.title}
+    div(class="mb-4") #{record.description}

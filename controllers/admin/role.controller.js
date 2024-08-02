@@ -20,10 +20,17 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/roles/create
 module.exports.createPost = async (req, res) => {
-  const records = new Role(req.body);
-  await records.save();
+  try{
+    if(res.locals.role.permissions.includes("roles_create")){
+      const records = new Role(req.body);
+      await records.save();
+    
+      res.redirect(`/${systemConfig.prefixAdmin}/roles`);
+    }
+  } catch(error){
+    res.redirect("back");
+  }
 
-  res.redirect(`/${systemConfig.prefixAdmin}/roles`);
 }
 
 // [GET] /admin/roles/edit/:id
@@ -46,14 +53,16 @@ module.exports.edit = async (req, res) => {
 // [PATCH] /admin/roles/edit/:id
 module.exports.editPatch = async (req, res) => {
   try {
-    const id = req.params.id;
-    const data = req.body ;
-    await Role.updateOne({
-      _id: id,
-      deleted: false
-    }, data);
-    req.flash("success", "Cập nhật thành công");
-    res.redirect("back"); 
+    if(res.locals.role.permissions.includes("roles_create")){
+      const id = req.params.id;
+      const data = req.body ;
+      await Role.updateOne({
+        _id: id,
+        deleted: false
+      }, data);
+      req.flash("success", "Cập nhật thành công");
+      res.redirect("back"); 
+    }
   } catch (error) {
     req.flash("error", "Cập nhật thất bại!");
     res.redirect(`/${systemConfig.prefixAdmin}/roles`);
@@ -68,7 +77,8 @@ module.exports.permissions = async (req, res) => {
     'Danh mục sản phẩm': ['products-category_view', 'products-category_create', 'products-category_edit', 'products-category_delete'],
     'Nhóm quyền': ['roles_view', 'roles_create', 'roles_edit', 'roles_delete', 'roles_permissions'],
     'Tài khoản admin': ['accounts_view', 'accounts_create', 'accounts_edit', 'accounts_delete'],
-    'Tài khoản user': ['users_view', 'users_create', 'users_edit', 'users_delete']
+    'Tài khoản user': ['users_view', 'users_create', 'users_edit', 'users_delete'],
+    'Cài đặt chung': ['settings_view', 'settings_create', 'settings_edit', 'settings_delete']
   };
   res.render("admin/pages/roles/permission.pug", {
     pageTitle: "Phân quyền",
@@ -79,20 +89,22 @@ module.exports.permissions = async (req, res) => {
 
 // [PATCH] /admin/roles/permissions
 module.exports.permissionsPatch = async (req, res) => {
-  const roles = req.body;
-  for (const role of roles) {
-    await Role.updateOne({
-      _id: role.id,
-      deleted: false
-    }, {
-      permissions: role.permissions
+  if(res.locals.role.permissions.includes("roles_permissions")){
+    const roles = req.body;
+    for (const role of roles) {
+      await Role.updateOne({
+        _id: role.id,
+        deleted: false
+      }, {
+        permissions: role.permissions
+      });
+    }
+  
+    res.json({
+      code: 200,
+      message: "Cập nhật thành công!"
     });
   }
-
-  res.json({
-    code: 200,
-    message: "Cập nhật thành công!"
-  });
 }
 
 // [GET] /admin/roles/detail/:id

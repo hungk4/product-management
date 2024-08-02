@@ -1,73 +1,86 @@
 extends ../../layouts/default.pug
 
 block main
-  h1(class="mb-4") Phân quyền
+  if(role.permissions.includes("roles_permissions"))
+    h1(class="mb-4") Phân quyền
 
-  if(records)
-    div(class="text-right")
-      button(
-        type="submit"
-        class="btn btn-primary mb-3"
-        button-submit=`/${prefixAdmin}/roles/permissions`
-      ) Cập nhật
+    if(records)
+      div(class="text-right")
+        button(
+          type="submit"
+          class="btn btn-primary mb-3"
+          button-submit=`/${prefixAdmin}/roles/permissions`
+        ) Cập nhật
 
-    table(
-      class="table table-hover table-sm"
-      table-permissions
-    )
-      thead
-        tr
-          th Tính năng
-          each item in records
-            th(
-              class="text-center"
-              role-id=item.id
-            ) #{item.title}
-      tbody
-        each value, key in permissionsMap
+      table(
+        class="table table-hover table-sm"
+        table-permissions
+      )
+        thead
           tr
-            td(colspan="4")
-              b #{key}
-          tr
-            td Xem
+            th Tính năng
             each item in records
-              td(class="text-center")
-                input(
-                  type="checkbox" 
-                  data-id=item.id 
-                  data-name=value[0]
-                  checked=(item.permissions.includes(value[0]) ? true : false)
-                )
-          tr
-            td Thêm mới
-            each item in records
-              td(class="text-center")
-                input(
-                  type="checkbox" 
-                  data-id=item.id
-                  data-name=value[1]
-                  checked=(item.permissions.includes(value[1]) ? true : false)
-                )
-          tr
-            td Chỉnh sửa
-            each item in records
-              td(class="text-center")
-                input(
-                  type="checkbox" 
-                  data-id=item.id
-                  data-name=value[2]
-                  checked=(item.permissions.includes(value[2]) ? true : false)
-                )
-          tr
-            td Xóa
-            each item in records
-              td(class="text-center")
-                input(
-                  type="checkbox" 
-                  data-id=item.id
-                  data-name=value[3]
-                  checked=(item.permissions.includes(value[3]) ? true : false)
-                )                              
+              th(
+                class="text-center"
+                role-id=item.id
+              ) #{item.title}
+        tbody
+          each value, key in permissionsMap
+            tr
+              td(colspan="4")
+                b #{key}
+            tr
+              td Xem
+              each item in records
+                td(class="text-center")
+                  
+                  input(
+                    type="checkbox" 
+                    data-id=item.id 
+                    data-name=value[0]
+                    checked=(item.permissions.includes(value[0]) ? true : false)
+                  )
+            tr
+              td Thêm mới
+              each item in records
+                td(class="text-center")
+                  input(
+                    type="checkbox" 
+                    data-id=item.id
+                    data-name=value[1]
+                    checked=(item.permissions.includes(value[1]) ? true : false)
+                  )
+            tr
+              td Chỉnh sửa
+              each item in records
+                td(class="text-center")
+                  input(
+                    type="checkbox" 
+                    data-id=item.id
+                    data-name=value[2]
+                    checked=(item.permissions.includes(value[2]) ? true : false)
+                  )
+            tr
+              td Xóa
+              each item in records
+                td(class="text-center")
+                  input(
+                    type="checkbox" 
+                    data-id=item.id
+                    data-name=value[3]
+                    checked=(item.permissions.includes(value[3]) ? true : false)
+                  )
+            if(value[4])
+              tr
+                td Phân quyền
+                each item in records
+                  td(class="text-center")
+                    input(
+                      type="checkbox" 
+                      data-id=item.id
+                      data-name=value[4]
+                      checked=(item.permissions.includes(value[4]) ? true : false)
+                    )                                   
                             
           
          
