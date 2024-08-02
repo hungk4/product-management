@@ -63,9 +63,17 @@ module.exports.editPatch = async (req, res) => {
 // [GET /admin/roles/permissions
 module.exports.permissions = async (req, res) => {
   const records = await Role.find({deleted: false});
+  const permissionsMap = {
+    'Danh sách sản phẩm': ['products_view', 'products_create', 'products_edit', 'products_delete'],
+    'Danh mục sản phẩm': ['products-category_view', 'products-category_create', 'products-category_edit', 'products-category_delete'],
+    'Nhóm quyền': ['roles_view', 'roles_create', 'roles_edit', 'roles_delete', 'roles_permissions'],
+    'Tài khoản admin': ['accounts_view', 'accounts_create', 'accounts_edit', 'accounts_delete'],
+    'Tài khoản user': ['users_view', 'users_create', 'users_edit', 'users_delete']
+  };
   res.render("admin/pages/roles/permission.pug", {
     pageTitle: "Phân quyền",
-    records: records
+    records: records,
+    permissionsMap: permissionsMap
   })
 }
 

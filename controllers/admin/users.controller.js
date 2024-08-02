@@ -13,7 +13,7 @@ module.exports.index = async (req, res) => {
 // [PATCH] /admin/users/change-status/:statusChange/:id
 module.exports.changeStatus = async (req, res) => {
   try{
-    if(res.locals.role.permissions.includes("products_edit")){
+    if(res.locals.role.permissions.includes("users_edit")){
       const { id, statusChange } = req.params;
   
       await User.updateOne({
