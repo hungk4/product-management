@@ -311,6 +311,6 @@ module.exports.detail = async (req, res) => {
     }
   } else {
     res.redirect(`/${systemConfig.prefixAdmin}/products`);
-    }
+  }
 }
 

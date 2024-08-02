@@ -39,14 +39,23 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/accounts/create
 module.exports.createPost = async (req, res) => {
-  req.body.password = md5(req.body.password);
+  if(res.locals.permissions.includes("accounts_create")){
+    try{
+      req.body.password = md5(req.body.password);
 
-  req.body.token = generateHelper.generateRandomString(30);
+      req.body.token = generateHelper.generateRandomString(30);
+    
+      const account = new Account(req.body);
+      await account.save();
+    
+      res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
+    } catch(error){
+      res.redirect("back");
+    }
+  } else {
+    res.redirect("back");
+  }
 
-  const account = new Account(req.body);
-  await account.save();
-
-  res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
 }
 
 // [GET] /admin/accounts/edit/:id
@@ -73,26 +82,30 @@ module.exports.edit = async (req, res) => {
 
 // [PATCH] /admin/accounts/edit/:id
 module.exports.editPatch = async (req, res) => {
-  try{
-    const id = req.params.id;
+  if(res.locals.permissions.includes("accounts_edit")){
+    try{
+      const id = req.params.id;
 
-    if(req.body.password == ""){
-      delete req.body.password;
-    } else {
-      req.body.password = md5(req.body.password);
+      if(req.body.password == ""){
+        delete req.body.password;
+      } else {
+        req.body.password = md5(req.body.password);
+      }
+
+      await Account.updateOne({
+        _id: id,
+        deleted: false
+      }, req.body);
+
+      req.flash("success", "Cập nhật thành công!");
+
+      res.redirect("back");
+
+    } catch(error){
+      res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
     }
-
-    await Account.updateOne({
-      _id: id,
-      deleted: false
-    }, req.body);
-
-    req.flash("success", "Cập nhật thành công!");
-
+  } else{
     res.redirect("back");
-
-  } catch(error){
-    res.redirect(`/${systemConfig.prefixAdmin}/accounts`);
   }
 }
 
@@ -151,14 +164,22 @@ module.exports.detail = async (req, res) => {
 };
 
 module.exports.delete = async (req, res) => {
-  const id = req.params.id;
-  await Account.deleteOne({
-    _id: id
-  });
-
-  req.flash('success', "Đã xóa tài khoản hoàn toàn !");
-
-  res.json({
-    code: 200
-  });
+  if(res.locals.permissions.includes("accounts_delete")){
+    try{
+      const id = req.params.id;
+      await Account.deleteOne({
+        _id: id
+      });
+  
+      req.flash('success', "Đã xóa tài khoản hoàn toàn !");
+  
+      res.json({
+        code: 200
+      }); 
+    } catch(error){
+      res.redirect("back");
+    }
+  } else{
+    res.redirect("back");
+  }
 }
