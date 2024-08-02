@@ -82,7 +82,7 @@ module.exports.edit = async (req, res) => {
 
 // [PATCH] /admin/accounts/edit/:id
 module.exports.editPatch = async (req, res) => {
-  if(res.locals.permissions.includes("accounts_edit")){
+  if(res.locals.role.permissions.includes("accounts_edit")){
     try{
       const id = req.params.id;
 
@@ -164,7 +164,7 @@ module.exports.detail = async (req, res) => {
 };
 
 module.exports.delete = async (req, res) => {
-  if(res.locals.permissions.includes("accounts_delete")){
+  if(res.locals.role.permissions.includes("accounts_delete")){
     try{
       const id = req.params.id;
       await Account.deleteOne({

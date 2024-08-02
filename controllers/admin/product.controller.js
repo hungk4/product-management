@@ -152,18 +152,22 @@ module.exports.changeMulti = async (req, res) => {
 // [PATCH] /admin/products/delete/:id
 module.exports.deleteItem = async (req, res) => {
   if(res.locals.role.permissions.includes("products_delete")){
-    const id = req.params.id;
-    await Product.updateOne({
-      _id: id
-    }, {
-      deleted: true,
-      deletedBy: res.locals.account.id,
-      deletedAt: new Date()
-    });
-    req.flash('success', 'Xóa sản phẩm thành công!');
-    res.json({
-      code: 200
-    });
+    try{
+      const id = req.params.id;
+      await Product.updateOne({
+        _id: id
+      }, {
+        deleted: true,
+        deletedBy: res.locals.account.id,
+        deletedAt: new Date()
+      });
+      req.flash('success', 'Xóa sản phẩm thành công!');
+      res.json({
+        code: 200
+      });
+    } catch(error) {
+      res.redirect("back");
+    }
   } else{
     res.send(`403`);
   }

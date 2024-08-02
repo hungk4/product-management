@@ -1,0 +1,8 @@
+extends ../../layouts/default.pug
+
+block main
+  if(role.permissions.includes("users_view"))
+    if(user.fullName)
+      div(class="mb-4") Tên: #{user.fullName}
+    if(user.email)
+      div(class="mb-4") Email: #{user.email}  
