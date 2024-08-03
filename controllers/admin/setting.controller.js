@@ -12,16 +12,20 @@ module.exports.general = async (req, res) => {
 
 // [PATCH] /admin/settings/general
 module.exports.generalPatch = async (req, res) => {
-  const setting = await Setting.findOne({});
-
-  if(setting) {
-    await Setting.updateOne({
-      _id: setting.id
-    }, req.body);
-  } else {
-    const record = new Setting(req.body);
-    await record.save();
+  if(res.locals.role.permissions.includes("settings_edit")){
+    const setting = await Setting.findOne({});
+    if(setting) {
+      await Setting.updateOne({
+        _id: setting.id
+      }, req.body);
+    } else {
+      const record = new Setting(req.body);
+      await record.save();
+    }
+  
+    res.redirect("back");
+  } else{
+    res.redirect("back");
   }
 
-  res.redirect("back");
 };

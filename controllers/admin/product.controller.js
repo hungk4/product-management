@@ -190,6 +190,7 @@ module.exports.changePosition = async (req, res) => {
       })
     } catch(error) {
       res.redirect(`/${systemConfig.prefixAdmin}/products`);
+      // res.redirect("*");
     }
   } else{
     res.send(`403`);
