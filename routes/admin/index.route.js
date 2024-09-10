@@ -3,6 +3,7 @@ const productRoute = require("./product.route");
 const recycleBinRoute = require("./recycleBin.route");
 const productsCategoryRoute = require("./productCategory.route");
 const recycleBinCategoryRoute = require("./recycleBinCategory.route");
+const cartRoute = require("./cart.route");
 const roleRoute = require("./role.route");
 const accountsRoute = require("./accounts.route");
 const usersRoute = require("./users.route");
@@ -26,6 +27,8 @@ module.exports.index = (app) => {
   app.use(`${path}/products-category`, authMiddleware.requireAuth,productsCategoryRoute);
 
   app.use(`${path}/recycleBinCategory`, authMiddleware.requireAuth, recycleBinCategoryRoute);
+
+  app.use(`${path}/cart`, authMiddleware.requireAuth, cartRoute);
 
   app.use(`${path}/roles`, authMiddleware.requireAuth, roleRoute);
 

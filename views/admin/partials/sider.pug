@@ -20,11 +20,14 @@ body
             <i class="fa-solid fa-list"></i> Danh mục
         li
           a(href=`/${prefixAdmin}/recycleBinCategory`) 
-            <i class="fa-solid fa-dumpster"></i> Thùng rác danh mục        
+            <i class="fa-solid fa-dumpster"></i> Thùng rác danh mục  
+      li
+        a(href=`/${prefixAdmin}/cart`)
+          <i class="fa-solid fa-cart-shopping"></i> Đơn hàng                   
       if(role.permissions.includes("roles_view"))
         li
           a(href=`/${prefixAdmin}/roles`) 
-            <i class="fa-solid fa-universal-access"></i> Nhóm quyền
+            <i class="fa-solid fa-universal-access"></i> Nhóm quyền     
       if(role.permissions.includes("roles_permissions"))
         li
           a(href=`/${prefixAdmin}/roles/permissions`) 

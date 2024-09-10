@@ -37,8 +37,9 @@ block main
                   img(
                     src=item.thumbnail
                     alt=item.title
-                    width="100px"
-                    height="auto"
+                    width="60px"
+                    height="60px"
+                    style="object-fit: cover;"
                   )
                 td #{item.title}
                 if(role.permissions.includes("products-category_edit"))

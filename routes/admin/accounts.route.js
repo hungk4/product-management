@@ -4,8 +4,8 @@ const router = express.Router();
 
 const controller = require("../../controllers/admin/accounts.controller");
 const uploadCloud = require("../../middlewares/admin/uploadCloud.middleware");
-
 const upload = multer();
+
 router.get("/", controller.index);
 router.get("/create", controller.create);
 router.post(
@@ -23,4 +23,5 @@ router.patch("/edit/:id",
 router.patch("/change-status/:statusChange/:id", controller.changeStatus);
 router.get("/detail/:id", controller.detail);
 router.patch("/delete/:id", controller.delete);
+
 module.exports = router;  
