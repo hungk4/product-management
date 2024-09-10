@@ -1,16 +1,17 @@
 extends ../../layouts/default.pug
 
 block main
-  if(role.permissions.includes("roles_permissions"))
+  if(role.permissions.includes("roles_view"))
     h1(class="mb-4") Phân quyền
 
     if(records)
-      div(class="text-right")
-        button(
-          type="submit"
-          class="btn btn-primary mb-3"
-          button-submit=`/${prefixAdmin}/roles/permissions`
-        ) Cập nhật
+      if(role.permissions.includes("roles_permissions"))
+        div(class="text-right")
+          button(
+            type="submit"
+            class="btn btn-primary mb-3"
+            button-submit=`/${prefixAdmin}/roles/permissions`
+          ) Cập nhật
 
       table(
         class="table table-hover table-sm"

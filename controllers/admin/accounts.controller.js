@@ -39,7 +39,7 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/accounts/create
 module.exports.createPost = async (req, res) => {
-  if(res.locals.permissions.includes("accounts_create")){
+  if(res.locals.role.permissions.includes("accounts_create")){
     try{
       req.body.password = md5(req.body.password);
 
