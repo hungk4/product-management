@@ -197,6 +197,7 @@ module.exports.edit = async (req, res) => {
   })
 }
 
+// [PATCH] /user/password/edit
 module.exports.editPatch = async (req, res) => {
   try {
     const tokenUser = req.cookies.tokenUser;
