@@ -21,9 +21,9 @@ body
         li
           a(href=`/${prefixAdmin}/recycleBinCategory`) 
             <i class="fa-solid fa-dumpster"></i> Thùng rác danh mục  
-      li
-        a(href=`/${prefixAdmin}/cart`)
-          <i class="fa-solid fa-cart-shopping"></i> Đơn hàng                   
+      //- li
+      //-   a(href=`/${prefixAdmin}/cart`)
+      //-     <i class="fa-solid fa-cart-shopping"></i> Đơn hàng                   
       if(role.permissions.includes("roles_view"))
         li
           a(href=`/${prefixAdmin}/roles`) 

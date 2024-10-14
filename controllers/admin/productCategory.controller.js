@@ -15,7 +15,7 @@ module.exports.index = async (req, res) => {
       const accountCreated = await Account.findOne({
         _id: item.createdBy
       })
-      item.createdByFullName = accountCreated.fullName;
+      item.createdByFullName = accountCreated ? accountCreated.fullName : "";
     } else{
       item.createdByFullName = "";
     }
@@ -26,7 +26,8 @@ module.exports.index = async (req, res) => {
       const accountUpdated = await Account.findOne({
         _id: item.updatedBy
       });
-      item.updatedByFullName = accountUpdated.fullName;
+      item.updatedByFullName = accountUpdated ? accountUpdated.fullName : "";
+
     } else {
       item.updatedByFullName = "";
     }
