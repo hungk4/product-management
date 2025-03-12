@@ -54,7 +54,7 @@ module.exports.index = async (req, res) => {
       const accountDeleted =  await Account.findOne({
         _id: item.deletedBy
       });
-      item.deletedByFullName = accountDeleted.fullName;
+      item.deletedByFullName = accountDeleted.fullName || "";
     } else{
       item.deletedByFullName = "";
     }
